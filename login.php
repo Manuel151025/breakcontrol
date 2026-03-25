@@ -585,6 +585,13 @@ try {
         <button type="submit" class="btn-login">Ingresar</button>
       </form>
 
+      <div style="text-align:center;margin-top:.8rem;">
+        <a href="<?= APP_URL ?>/recuperar_pin.php"
+           style="font-size:.78rem;color:var(--c3,#c67124);font-weight:600;text-decoration:none;">
+          🔑 ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
       <div class="login-pie">
         <div class="pie-dot"></div>
         <span class="pie-txt">Solo personal autorizado · Florencia, Caquetá · 2026</span>

@@ -274,8 +274,11 @@ function navActive($path) {
     <a href="<?= APP_URL ?>/modules/finanzas/index.php"   class="n-item <?= navActive('/finanzas') ?>"><i class="bi bi-cash-stack"></i><span class="n-lbl">Finanzas</span></a>
     <a href="<?= APP_URL ?>/modules/gastos/index.php"     class="n-item <?= navActive('/gastos') ?>"><i class="bi bi-receipt-cutoff"></i><span class="n-lbl">Gastos</span></a>
     <a href="<?= APP_URL ?>/modules/cierre/index.php"     class="n-item <?= navActive('/cierre') ?>"><i class="bi bi-moon-stars-fill"></i><span class="n-lbl">Cierre del día</span></a>
-    <!-- Solo visible en mobile: ciudad + logout -->
+    <!-- Solo visible en mobile: config + ciudad + logout -->
     <div class="n-menu-sep"></div>
+    <a href="<?= APP_URL ?>/modules/configuracion/pin.php" class="n-menu-ciudad" style="text-decoration:none;">
+      <i class="bi bi-key-fill"></i><span>Configurar PIN</span>
+    </a>
     <button class="n-menu-ciudad" onclick="abrirModalCiudad()">
       <i class="bi bi-geo-alt-fill"></i><span>Cambiar ciudad</span>
     </button>
@@ -294,14 +297,14 @@ function navActive($path) {
       <span id="ciudad-lbl">Florencia</span>
     </button>
 
-    <!-- Usuario -->
-    <div class="n-user">
+    <!-- Usuario (click va a config PIN) -->
+    <a href="<?= APP_URL ?>/modules/configuracion/pin.php" class="n-user" style="text-decoration:none;cursor:pointer;" title="Configurar PIN de recuperación">
       <div class="n-avatar"><?= strtoupper(substr($user['nombre'], 0, 1)) ?></div>
       <div>
         <div class="n-uname"><?= htmlspecialchars($user['nombre']) ?></div>
         <div class="n-urole">Propietario</div>
       </div>
-    </div>
+    </a>
 
     <!-- Logout (desktop) -->
     <a href="<?= APP_URL ?>/logout.php" class="n-logout" title="Cerrar sesión">
