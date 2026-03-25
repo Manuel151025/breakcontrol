@@ -153,7 +153,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
             <div class="fl">
               <label>Unidades por tanda</label>
               <input type="number" name="cantidad_por_tanda" min="0" step="1"
-                     value="<?= $_POST['cantidad_por_tanda'] ?? 0 ?>" placeholder="0">
+                     value="<?= htmlspecialchars($_POST['cantidad_por_tanda'] ?? '0', ENT_QUOTES) ?? 0 ?>" placeholder="0">
               <div class="fl-hint">0 si varía</div>
             </div>
           </div>
@@ -162,7 +162,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
           <div class="fl">
             <label>Precio de venta</label>
             <input type="number" name="precio_venta" min="0" step="50"
-                   value="<?= $_POST['precio_venta'] ?? 0 ?>">
+                   value="<?= htmlspecialchars($_POST['precio_venta'] ?? '0', ENT_QUOTES) ?? 0 ?>">
             <div class="fl-hint">Deja en 0 si el precio varía</div>
           </div>
 

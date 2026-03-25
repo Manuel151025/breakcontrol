@@ -151,10 +151,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_venta'])) {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  GET — Eliminar venta
+//  GET — Eliminar venta (solo del día actual)
 // ══════════════════════════════════════════════════════════════
 if (!empty($_GET['del_venta'])) {
-    $pdo->prepare("DELETE FROM venta WHERE id_venta=?")->execute([(int)$_GET['del_venta']]);
+    try {
+        $stmt = $pdo->prepare("DELETE FROM venta WHERE id_venta=? AND DATE(fecha_hora)=CURDATE()");
+        $stmt->execute([(int)$_GET['del_venta']]);
+    } catch (Exception $e) {
+        // FK o error de BD — ignorar silenciosamente
+    }
     header('Location: index.php'); exit;
 }
 
@@ -384,7 +389,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
                 <label>Precio por unidad ($)</label>
                 <input type="number" name="precio_manual" id="inp-precio"
                        min="0" step="50" placeholder="Precio"
-                       value="<?= $_POST['precio_manual'] ?? '' ?>"
+                       value="<?= htmlspecialchars($_POST['precio_manual'] ?? '', ENT_QUOTES) ?? '' ?>"
                        oninput="actualizarVista()">
               </div>
               <div class="precio-display">

@@ -500,7 +500,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
           <div class="fl">
             <label>Fecha</label>
             <input type="date" name="fecha_produccion"
-                   value="<?= $_POST['fecha_produccion'] ?? date('Y-m-d') ?>">
+                   value="<?= htmlspecialchars($_POST['fecha_produccion'] ?? date('Y-m-d'), ENT_QUOTES) ?? date('Y-m-d') ?>">
           </div>
 
           <div class="fl">

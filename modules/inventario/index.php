@@ -30,11 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_insumo'])) {
         $chk = $pdo->prepare("SELECT id_insumo FROM insumo WHERE nombre = ? AND id_insumo != ?");
         $chk->execute([$nombre, $id_edit]);
         if ($chk->fetch()) {
-            $msg_err = "Ya existe otro insumo con el nombre \"$nombre\". Elige un nombre diferente.";
+            $msg_err = "Ya existe otro insumo con el nombre \"".htmlspecialchars($nombre)."\". Elige un nombre diferente.";
         } else {
-            $pdo->prepare("UPDATE insumo SET nombre=?,unidad_medida=?,stock_actual=?,punto_reposicion=?,es_harina=? WHERE id_insumo=?")
-                ->execute([$nombre, $unidad, $stock, $reposi, $es_har, $id_edit]);
-            redirigir(APP_URL . '/modules/inventario/index.php', 'exito', "Insumo <strong>$nombre</strong> actualizado correctamente.");
+            try {
+                $pdo->prepare("UPDATE insumo SET nombre=?,unidad_medida=?,stock_actual=?,punto_reposicion=?,es_harina=? WHERE id_insumo=?")
+                    ->execute([$nombre, $unidad, $stock, $reposi, $es_har, $id_edit]);
+                redirigir(APP_URL . '/modules/inventario/index.php', 'exito', "Insumo <strong>".htmlspecialchars($nombre)."</strong> actualizado correctamente.");
+            } catch (Exception $e) {
+                $msg_err = 'Error al actualizar el insumo.';
+            }
         }
     } else {
         // Si existe con el mismo nombre (activo o inactivo) → reactivar con nuevos datos
@@ -42,21 +46,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_insumo'])) {
         $chk->execute([$nombre]);
         $existe = $chk->fetch();
         if ($existe) {
-            // Ya existe → actualizar y reactivar en lugar de duplicar
-            $pdo->prepare("UPDATE insumo SET unidad_medida=?,stock_actual=?,punto_reposicion=?,es_harina=?,activo=1 WHERE id_insumo=?")
-                ->execute([$unidad, $stock, $reposi, $es_har, $existe['id_insumo']]);
-            $msg_ok = "Insumo <strong>$nombre</strong> actualizado y reactivado correctamente.";
+            try {
+                $pdo->prepare("UPDATE insumo SET unidad_medida=?,stock_actual=?,punto_reposicion=?,es_harina=?,activo=1 WHERE id_insumo=?")
+                    ->execute([$unidad, $stock, $reposi, $es_har, $existe['id_insumo']]);
+                $msg_ok = "Insumo <strong>".htmlspecialchars($nombre)."</strong> actualizado y reactivado correctamente.";
+            } catch (Exception $e) {
+                $msg_err = 'Error al reactivar el insumo.';
+            }
         } else {
-            $pdo->prepare("INSERT INTO insumo (nombre,unidad_medida,stock_actual,punto_reposicion,es_harina,activo) VALUES (?,?,?,?,?,1)")
-                ->execute([$nombre, $unidad, $stock, $reposi, $es_har]);
-            $msg_ok = 'Insumo registrado correctamente.';
+            try {
+                $pdo->prepare("INSERT INTO insumo (nombre,unidad_medida,stock_actual,punto_reposicion,es_harina,activo) VALUES (?,?,?,?,?,1)")
+                    ->execute([$nombre, $unidad, $stock, $reposi, $es_har]);
+                $msg_ok = 'Insumo registrado correctamente.';
+            } catch (Exception $e) {
+                $msg_err = 'Error al registrar el insumo.';
+            }
         }
     }
 }
 
-// ── Eliminar ────────────────────────────────────────────────────
+// ── Desactivar (soft delete) ─────────────────────────────────
 if (!empty($_GET['del'])) {
-    $pdo->prepare("DELETE FROM insumo WHERE id_insumo=?")->execute([(int)$_GET['del']]);
+    try {
+        $pdo->prepare("UPDATE insumo SET activo=0 WHERE id_insumo=?")->execute([(int)$_GET['del']]);
+    } catch (Exception $e) {
+        // Si falla, redirigir sin acción
+    }
     header('Location: index.php'); exit;
 }
 

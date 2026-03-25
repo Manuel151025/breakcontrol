@@ -21,24 +21,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cliente'])) {
     if (!$nombre) {
         $msg_err = 'El nombre de la tienda es obligatorio.';
     } elseif ($id_edit) {
-        $pdo->prepare("UPDATE cliente SET nombre=?, tipo='tienda', telefono=? WHERE id_cliente=?")
-            ->execute([$nombre, $telefono, $id_edit]);
-        redirigir(APP_URL.'/modules/ventas/clientes.php', 'exito', "Tienda <strong>$nombre</strong> actualizada.");
+        try {
+            $pdo->prepare("UPDATE cliente SET nombre=?, tipo='tienda', telefono=? WHERE id_cliente=?")
+                ->execute([$nombre, $telefono, $id_edit]);
+            redirigir(APP_URL.'/modules/ventas/clientes.php', 'exito', "Tienda <strong>".htmlspecialchars($nombre)."</strong> actualizada.");
+        } catch (Exception $e) {
+            $msg_err = 'Error al actualizar la tienda.';
+        }
     } else {
         $ck = $pdo->prepare("SELECT id_cliente FROM cliente WHERE nombre=? AND activo=1");
         $ck->execute([$nombre]);
         if ($ck->fetch()) {
             $msg_err = "Ya existe una tienda con ese nombre.";
         } else {
-            $pdo->prepare("INSERT INTO cliente (nombre, tipo, telefono, activo) VALUES (?, 'tienda', ?, 1)")
-                ->execute([$nombre, $telefono]);
-            $msg_ok = "Tienda <strong>$nombre</strong> registrada correctamente.";
+            try {
+                $pdo->prepare("INSERT INTO cliente (nombre, tipo, telefono, activo) VALUES (?, 'tienda', ?, 1)")
+                    ->execute([$nombre, $telefono]);
+                $msg_ok = "Tienda <strong>".htmlspecialchars($nombre)."</strong> registrada correctamente.";
+            } catch (Exception $e) {
+                $msg_err = 'Error al registrar la tienda.';
+            }
         }
     }
 }
 
 if (!empty($_GET['del'])) {
-    $pdo->prepare("UPDATE cliente SET activo=0 WHERE id_cliente=?")->execute([(int)$_GET['del']]);
+    try {
+        $pdo->prepare("UPDATE cliente SET activo=0 WHERE id_cliente=?")->execute([(int)$_GET['del']]);
+    } catch (Exception $e) { /* error silencioso */ }
     header('Location: clientes.php'); exit;
 }
 

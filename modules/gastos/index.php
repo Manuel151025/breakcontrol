@@ -18,23 +18,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_gasto'])) {
     $desc = trim($_POST['descripcion'] ?? '');
     $val  = (float)str_replace(['.', '$', ' '], '', $_POST['valor'] ?? 0);
 
+    // Validar categoría permitida
+    if (!in_array($cat, ['compra','servicio','otro'])) $cat = '';
+
     if (!$cat || !$desc || $val <= 0) {
         $msg_err = 'Completa todos los campos correctamente.';
     } else {
-        $pdo->prepare("INSERT INTO gasto (id_usuario, categoria, descripcion, valor) VALUES (?,?,?,?)")
-            ->execute([$user['id_usuario'], $cat, $desc, $val]);
-        $msg_ok = 'Gasto registrado correctamente.';
+        try {
+            $pdo->prepare("INSERT INTO gasto (id_usuario, categoria, descripcion, valor) VALUES (?,?,?,?)")
+                ->execute([$user['id_usuario'], $cat, $desc, $val]);
+            $msg_ok = 'Gasto registrado correctamente.';
+        } catch (Exception $e) {
+            $msg_err = 'Error al registrar el gasto.';
+        }
     }
 }
 
-// ── Eliminar gasto ─────────────────────────────────────────────────────────
+// ── Eliminar gasto (solo del día actual) ──────────────────────────────────
 if (!empty($_GET['del'])) {
-    $pdo->prepare("DELETE FROM gasto WHERE id_gasto=?")->execute([(int)$_GET['del']]);
-    header('Location: index.php?fecha=' . ($_GET['fecha'] ?? $hoy)); exit;
+    try {
+        $pdo->prepare("DELETE FROM gasto WHERE id_gasto=? AND DATE(fecha_gasto)=CURDATE()")
+            ->execute([(int)$_GET['del']]);
+    } catch (Exception $e) { /* error silencioso */ }
+    $redir_fecha = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fecha'] ?? '') ? $_GET['fecha'] : $hoy;
+    header('Location: index.php?fecha=' . $redir_fecha); exit;
 }
 
 // ── Filtro por fecha ───────────────────────────────────────────────────────
-$fecha_fil = $_GET['fecha'] ?? $hoy;
+$fecha_fil = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fecha'] ?? '') ? $_GET['fecha'] : $hoy;
 
 // Gastos del día filtrado
 $stmt = $pdo->prepare("

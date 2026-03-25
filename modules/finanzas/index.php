@@ -9,12 +9,12 @@ $pdo  = getConexion();
 $user = usuarioActual();
 
 // ── Filtros ────────────────────────────────────────────────────────────────
-$modo   = $_GET['modo']   ?? 'mes';
+$modo   = in_array($_GET['modo'] ?? 'mes', ['mes','semana','rango']) ? $_GET['modo'] : 'mes';
 $anio   = (int)($_GET['anio']   ?? date('Y'));
-$mes    = (int)($_GET['mes']    ?? date('m'));
-$semana = (int)($_GET['semana'] ?? date('W'));
-$desde  = $_GET['desde']  ?? date('Y-m-01');
-$hasta  = $_GET['hasta']  ?? date('Y-m-d');
+$mes    = max(1, min(12, (int)($_GET['mes'] ?? date('m'))));
+$semana = max(1, min(53, (int)($_GET['semana'] ?? date('W'))));
+$desde  = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['desde'] ?? '') ? $_GET['desde'] : date('Y-m-01');
+$hasta  = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['hasta'] ?? '') ? $_GET['hasta'] : date('Y-m-d');
 
 if ($modo === 'mes') {
     $desde          = "$anio-" . str_pad($mes, 2, '0', STR_PAD_LEFT) . "-01";

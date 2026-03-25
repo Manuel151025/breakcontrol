@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_compra'])) {
 // ── Filtros ────────────────────────────────────────────────────────────────
 $busca         = trim($_GET['q'] ?? '');
 $filtro_alerta = !empty($_GET['alerta']);
-$mes_filtro    = $_GET['mes'] ?? date('Y-m');
+$mes_filtro    = preg_match('/^\d{4}-\d{2}$/', $_GET['mes'] ?? '') ? $_GET['mes'] : date('Y-m');
 
 $where  = "WHERE 1=1";
 $params = [];
@@ -456,7 +456,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
             <div class="fl">
               <label>N° de bolsas / empaques</label>
               <input type="number" id="vis-bultos"
-                     value="<?= $_POST['num_bultos'] ?? '1' ?>"
+                     value="<?= htmlspecialchars($_POST['num_bultos'] ?? '1', ENT_QUOTES) ?? '1' ?>"
                      min="1" step="1" placeholder="1"
                      oninput="recalcular()"
                      <?= esHoyDomingo() ? 'disabled' : '' ?>>
@@ -464,7 +464,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
             <div class="fl">
               <label>Cantidad por bolsa <span id="tag-unidad" class="inp-unidad-tag" style="display:none"></span></label>
               <input type="number" id="vis-cant-bolsa"
-                     value="<?= $_POST['vis_cant_bolsa'] ?? '' ?>"
+                     value="<?= htmlspecialchars($_POST['vis_cant_bolsa'] ?? '', ENT_QUOTES) ?? '' ?>"
                      min="0.001" step="0.001" placeholder="Ej: 2.5"
                      oninput="recalcular()"
                      <?= esHoyDomingo() ? 'disabled' : '' ?>>
@@ -483,7 +483,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
           <div class="fl">
             <label>Precio por bolsa / empaque ($)</label>
             <input type="number" name="precio_bulto" id="inp-precio"
-                   value="<?= $_POST['precio_bulto'] ?? '' ?>"
+                   value="<?= htmlspecialchars($_POST['precio_bulto'] ?? '', ENT_QUOTES) ?? '' ?>"
                    min="1" placeholder="Ej: 9.800"
                    oninput="recalcular()"
                    <?= esHoyDomingo() ? 'disabled' : '' ?>>
@@ -510,7 +510,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
           <div class="fl" style="margin-top:.3rem">
             <label style="color:var(--ink3)">Fecha de compra</label>
             <input type="date" name="fecha_compra"
-                   value="<?= $_POST['fecha_compra'] ?? date('Y-m-d') ?>"
+                   value="<?= htmlspecialchars($_POST['fecha_compra'] ?? date('Y-m-d'), ENT_QUOTES) ?? date('Y-m-d') ?>"
                    max="<?= date('Y-m-d') ?>"
                    <?= esHoyDomingo() ? 'disabled' : '' ?>>
           </div>

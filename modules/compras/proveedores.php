@@ -25,19 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($entrega === 'visita' && empty($dias_visita)) $errores[] = 'Selecciona al menos un día de visita.';
 
     if (empty($errores)) {
-        if ($id_edit > 0) {
-            $pdo->prepare("
-                UPDATE proveedor
-                SET nombre=?, telefono=?, tipo_entrega=?, dias_entrega_promedio=?, dias_visita=?
-                WHERE id_proveedor=?
-            ")->execute([$nombre, $telefono, $entrega, $dias, $dias_visita, $id_edit]);
-            redirigir(APP_URL . '/modules/compras/proveedores.php', 'exito', "Proveedor <strong>$nombre</strong> actualizado.");
-        } else {
-            $pdo->prepare("
-                INSERT INTO proveedor (nombre, telefono, tipo_entrega, dias_entrega_promedio, dias_visita)
-                VALUES (?,?,?,?,?)
-            ")->execute([$nombre, $telefono, $entrega, $dias, $dias_visita]);
-            redirigir(APP_URL . '/modules/compras/proveedores.php', 'exito', "Proveedor <strong>$nombre</strong> creado.");
+        try {
+            if ($id_edit > 0) {
+                $pdo->prepare("
+                    UPDATE proveedor
+                    SET nombre=?, telefono=?, tipo_entrega=?, dias_entrega_promedio=?, dias_visita=?
+                    WHERE id_proveedor=?
+                ")->execute([$nombre, $telefono, $entrega, $dias, $dias_visita, $id_edit]);
+                redirigir(APP_URL . '/modules/compras/proveedores.php', 'exito', "Proveedor <strong>".htmlspecialchars($nombre)."</strong> actualizado.");
+            } else {
+                $pdo->prepare("
+                    INSERT INTO proveedor (nombre, telefono, tipo_entrega, dias_entrega_promedio, dias_visita)
+                    VALUES (?,?,?,?,?)
+                ")->execute([$nombre, $telefono, $entrega, $dias, $dias_visita]);
+                redirigir(APP_URL . '/modules/compras/proveedores.php', 'exito', "Proveedor <strong>".htmlspecialchars($nombre)."</strong> creado.");
+            }
+        } catch (Exception $e) {
+            $errores[] = 'Error al guardar el proveedor.';
         }
     }
 }
@@ -45,8 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ── Desactivar proveedor ────────────────────────────────────────
 if (isset($_GET['desactivar'])) {
     requerirPropietario();
-    $pdo->prepare("UPDATE proveedor SET activo=0 WHERE id_proveedor=?")->execute([(int)$_GET['desactivar']]);
-    redirigir(APP_URL . '/modules/compras/proveedores.php', 'alerta', 'Proveedor desactivado.');
+    try {
+        $pdo->prepare("UPDATE proveedor SET activo=0 WHERE id_proveedor=?")->execute([(int)$_GET['desactivar']]);
+        redirigir(APP_URL . '/modules/compras/proveedores.php', 'alerta', 'Proveedor desactivado.');
+    } catch (Exception $e) {
+        redirigir(APP_URL . '/modules/compras/proveedores.php', 'error', 'Error al desactivar proveedor.');
+    }
 }
 
 // ── Cargar para editar ──────────────────────────────────────────

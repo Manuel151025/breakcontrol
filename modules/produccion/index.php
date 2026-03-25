@@ -11,7 +11,7 @@ $user = usuarioActual();
 // index.php solo muestra historial — el registro va en nueva_produccion.php
 
 // ── Filtro por fecha ────────────────────────────────────────────
-$fecha_fil = $_GET['fecha'] ?? date('Y-m-d');
+$fecha_fil = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fecha'] ?? '') ? $_GET['fecha'] : date('Y-m-d');
 
 $stmt = $pdo->prepare("
     SELECT pr.*, p.nombre AS producto, p.unidad_produccion,
@@ -168,7 +168,7 @@ require_once __DIR__ . '/../../views/layouts/header.php';
     <div class="fil-wrap">
       <span class="fil-lbl">Fecha:</span>
       <form method="get">
-        <input type="date" name="fecha" class="fil-date" value="<?= $fecha_fil ?>" onchange="this.form.submit()">
+        <input type="date" name="fecha" class="fil-date" value="<?= htmlspecialchars($fecha_fil) ?>" onchange="this.form.submit()">
       </form>
       <a href="nueva_produccion.php" class="btn-grad"><i class="bi bi-plus-lg"></i> Nueva con receta</a>
     </div>

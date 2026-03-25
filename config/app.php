@@ -13,7 +13,7 @@ date_default_timezone_set('America/Bogota');
 
 // Sesión
 define('SESSION_NOMBRE',   'panaderia_session');
-define('SESSION_DURACION', 7200);  // 2 horas en segundos
+define('SESSION_DURACION', 28800); // 8 horas en segundos
 
 // Rutas de módulos
 define('MOD_INVENTARIO', APP_URL . '/modules/inventario');

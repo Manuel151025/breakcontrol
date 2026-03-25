@@ -32,11 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_venta'])) {
             $msg_err = $stock['mensaje'];
         } else {
             $total = $unidades * $precio;
-            $pdo->prepare("INSERT INTO venta (id_producto,id_cliente,id_usuario,unidades_vendidas,precio_unitario,total_venta,unidades_sobrantes,fecha_hora) VALUES (?,?,?,?,?,?,?,NOW())")
-                ->execute([$id_prod, $id_cli, $user['id_usuario'], $unidades, $precio, $total, $sobrantes]);
-            $_SESSION['msg_ok'] = 'Venta registrada: $' . number_format($total, 0, ',', '.');
-            header('Location: nueva_venta.php');
-            exit;
+            try {
+                $pdo->prepare("INSERT INTO venta (id_producto,id_cliente,id_usuario,unidades_vendidas,precio_unitario,total_venta,unidades_sobrantes,fecha_hora) VALUES (?,?,?,?,?,?,?,NOW())")
+                    ->execute([$id_prod, $id_cli, $user['id_usuario'], $unidades, $precio, $total, $sobrantes]);
+                $_SESSION['msg_ok'] = 'Venta registrada: $' . number_format($total, 0, ',', '.');
+                header('Location: nueva_venta.php');
+                exit;
+            } catch (Exception $e) {
+                $msg_err = 'Error al registrar la venta. Intenta de nuevo.';
+            }
         }
     }
 }

@@ -170,7 +170,7 @@ include __DIR__ . '/../../views/layouts/header.php';
             </label>
             <input type="number" name="cantidad_real" id="cantidad_real"
                    class="form-control form-control-lg input-cantidad"
-                   value="<?= $_POST['cantidad_real'] ?? '' ?>"
+                   value="<?= htmlspecialchars($_POST['cantidad_real'] ?? '', ENT_QUOTES) ?? '' ?>"
                    min="0" step="0.001" required autofocus>
           </div>
 

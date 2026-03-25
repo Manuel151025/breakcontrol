@@ -93,7 +93,7 @@ include __DIR__ . '/../../views/layouts/header.php';
             <label class="form-label fw-semibold">Punto de reposición</label>
             <div class="input-group">
               <input type="number" name="punto_reposicion" class="form-control input-cantidad"
-                     value="<?= $_POST['punto_reposicion'] ?? 0 ?>"
+                     value="<?= htmlspecialchars($_POST['punto_reposicion'] ?? '0', ENT_QUOTES) ?? 0 ?>"
                      min="0" step="0.001">
               <span class="input-group-text text-muted">unidades</span>
             </div>

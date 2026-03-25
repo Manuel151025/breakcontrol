@@ -7,8 +7,8 @@ require_once __DIR__ . '/../../includes/funciones.php';
 requerirPropietario();
 $pdo = getConexion();
 
-$desde = $_GET['desde'] ?? date('Y-m-01');
-$hasta = $_GET['hasta'] ?? date('Y-m-d');
+$desde = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['desde'] ?? '') ? $_GET['desde'] : date('Y-m-01');
+$hasta = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['hasta'] ?? '') ? $_GET['hasta'] : date('Y-m-d');
 $user  = usuarioActual();
 
 // ── Totales ──────────────────────────────────────────────────────

@@ -39,22 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($validos)) { $errores[] = 'Agrega al menos un ingrediente con cantidad.'; }
 
     if (empty($errores)) {
-        $check = $pdo->prepare("SELECT id_receta FROM receta WHERE id_producto=? AND es_vigente=1 LIMIT 1");
-        $check->execute([$id_producto]);
-        $id_receta = $check->fetchColumn();
+        try {
+            $check = $pdo->prepare("SELECT id_receta FROM receta WHERE id_producto=? AND es_vigente=1 LIMIT 1");
+            $check->execute([$id_producto]);
+            $id_receta = $check->fetchColumn();
 
-        if (!$id_receta) {
-            $pdo->prepare("INSERT INTO receta (id_producto,id_usuario,version,es_vigente,es_ajuste_temporal,fecha_creacion) VALUES (?,?,1,1,0,NOW())")
-                ->execute([$id_producto, $user['id_usuario']]);
-            $id_receta = $pdo->lastInsertId();
-        }
+            if (!$id_receta) {
+                $pdo->prepare("INSERT INTO receta (id_producto,id_usuario,version,es_vigente,es_ajuste_temporal,fecha_creacion) VALUES (?,?,1,1,0,NOW())")
+                    ->execute([$id_producto, $user['id_usuario']]);
+                $id_receta = $pdo->lastInsertId();
+            }
 
-        $pdo->prepare("DELETE FROM receta_ingrediente WHERE id_receta=?")->execute([$id_receta]);
-        $ins = $pdo->prepare("INSERT INTO receta_ingrediente (id_receta,id_insumo,cantidad,aplica_merma,notas) VALUES (?,?,?,?,?)");
-        foreach ($validos as $v) {
-            $ins->execute([$id_receta, $v['id_insumo'], $v['cantidad'], $v['aplica_merma'], $v['notas']]);
+            $pdo->prepare("DELETE FROM receta_ingrediente WHERE id_receta=?")->execute([$id_receta]);
+            $ins = $pdo->prepare("INSERT INTO receta_ingrediente (id_receta,id_insumo,cantidad,aplica_merma,notas) VALUES (?,?,?,?,?)");
+            foreach ($validos as $v) {
+                $ins->execute([$id_receta, $v['id_insumo'], $v['cantidad'], $v['aplica_merma'], $v['notas']]);
+            }
+            header('Location: index.php?ok=1'); exit;
+        } catch (Exception $e) {
+            $errores[] = 'Error al guardar la receta. Intenta de nuevo.';
         }
-        header('Location: index.php?ok=1'); exit;
     }
 }
 

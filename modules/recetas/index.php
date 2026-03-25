@@ -10,7 +10,9 @@ $user = usuarioActual();
 
 // ── Desactivar producto ─────────────────────────────────────────
 if (!empty($_GET['del'])) {
-    $pdo->prepare("UPDATE producto SET activo=0 WHERE id_producto=?")->execute([(int)$_GET['del']]);
+    try {
+        $pdo->prepare("UPDATE producto SET activo=0 WHERE id_producto=?")->execute([(int)$_GET['del']]);
+    } catch (Exception $e) { /* error silencioso */ }
     header('Location: index.php'); exit;
 }
 
