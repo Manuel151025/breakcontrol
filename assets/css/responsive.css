@@ -1,0 +1,380 @@
+/* ═══════════════════════════════════════════════════════════════
+   responsive.css — BreakControl · Sistema Panadería
+   Breakpoints:
+     xs  < 480px   (teléfonos pequeños)
+     sm  < 640px   (teléfonos)
+     md  < 768px   (tablets verticales)
+     lg  < 1024px  (tablets horizontales)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ────────────────────────────────────────────────────────────────
+   1. RESET MOBILE — el body deja de ser fixed/hidden en móvil
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  html, body {
+    height: auto !important;
+    overflow: auto !important;
+    overflow-x: hidden !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   2. NAVBAR
+   El nav responsive se gestiona en views/layouts/header.php
+   para evitar conflictos (header.php carga después y sobreescribiría
+   estos estilos de todas formas).
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* Ocultar reloj y ciudad en tablets medianas */
+  .n-clock  { display: none; }
+  .n-ciudad { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   3. TABLERO — layout principal
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* El .page deja de ser overflow:hidden */
+  .page {
+    height: auto !important;
+    overflow: visible !important;
+    margin-top: 62px;
+    padding: .4rem;
+    gap: .6rem;
+    grid-template-rows: auto auto !important;
+  }
+
+  /* Bienvenida: apilar verticalmente */
+  .welcome {
+    grid-template-columns: 1fr !important;
+    gap: .6rem;
+  }
+
+  .wc-banner {
+    flex-direction: column;
+    gap: .8rem;
+    padding: 1rem 1rem;
+  }
+  .wc-name { font-size: 1.25rem; }
+  .wc-pills { gap: .45rem; flex-wrap: wrap; }
+  .wc-pill { min-width: 60px; flex: 1; padding: .4rem .5rem !important; }
+  .wc-pill-num { font-size: 1.05rem !important; }
+  .wc-pill-lbl { font-size: .48rem !important; }
+
+  .clima-box { min-width: unset; }
+
+  /* Grid de cards: 1 columna */
+  .grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+  }
+
+  /* La card de finanzas deja de ocupar 2 filas */
+  .grid .card[style*="grid-row"] {
+    grid-row: auto !important;
+  }
+
+  /* Números grandes */
+  .bign { font-size: 1.8rem; }
+
+  /* mini gráfico de barras */
+  .graf-wrap { height: 80px; }
+
+  /* Acciones rápidas: 2 columnas en lugar de 3 */
+  .ac-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .wc-pills { gap: .3rem; }
+  .wc-pill { min-width: 50px; padding: .35rem .4rem !important; border-radius: 8px !important; }
+  .wc-pill-num { font-size: .88rem !important; }
+  .wc-pill-lbl { font-size: .44rem !important; letter-spacing: .06em !important; }
+  .wc-banner { padding: .7rem .9rem !important; gap: .6rem !important; }
+  .wc-name { font-size: 1.1rem !important; }
+  .wc-sub { font-size: .62rem !important; }
+  .fin3 { grid-template-columns: 1fr !important; gap: .4rem; }
+  .ac-grid { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 360px) {
+  .wc-pills { gap: .25rem; }
+  .wc-pill { min-width: 42px; padding: .3rem .3rem !important; }
+  .wc-pill-num { font-size: .78rem !important; }
+  .wc-pill-lbl { font-size: .4rem !important; }
+  .wc-greeting { font-size: .55rem !important; }
+  .wc-name { font-size: .95rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   4. CONTENEDORES GENERALES (aplica a TODOS los módulos)
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Contenedor de página genérico */
+  .container, .page-wrap, .mod-wrap {
+    padding: .6rem !important;
+    margin-top: 62px;
+  }
+
+  /* Encabezado de módulo */
+  .mod-header, .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: .6rem;
+  }
+  .mod-header h1, .page-header h1 {
+    font-size: 1.3rem !important;
+  }
+
+  /* Grids genéricos de 2–4 columnas → 1 columna */
+  .row-stats, .stats-grid, .kpi-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Cards generales */
+  .card {
+    padding: .9rem 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .row-stats, .stats-grid, .kpi-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   5. TABLAS — scroll horizontal en móvil
+   ──────────────────────────────────────────────────────────────── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  /* Envolver tablas automáticamente */
+  table.table, table.mt {
+    min-width: 500px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tablas pequeñas de tarjetas: ajuste de fuente */
+  .mt th, .mt td {
+    font-size: .75rem !important;
+    padding: .35rem .2rem !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   6. FORMULARIOS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Filas de formulario → columna única */
+  .form-row, .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: .75rem !important;
+  }
+
+  /* Grupos de formulario */
+  .form-group label {
+    font-size: .8rem !important;
+  }
+  .form-control, .form-select, input[type="text"],
+  input[type="number"], input[type="date"],
+  input[type="email"], select, textarea {
+    font-size: 16px !important; /* evita zoom en iOS */
+    padding: .55rem .75rem !important;
+  }
+
+  /* Botones de acción: full width */
+  .btn-primary, .btn-secondary, .btn-danger {
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-group-actions {
+    flex-direction: column !important;
+    gap: .5rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   7. MÓDULO INVENTARIO
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .inv-header { flex-direction: column !important; gap: .6rem; }
+  .inv-filters { flex-wrap: wrap; gap: .5rem; }
+  .inv-search { width: 100% !important; }
+  .inv-table-wrap { overflow-x: auto; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   8. MÓDULO VENTAS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .venta-card { padding: .9rem !important; }
+  .venta-resumen {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .venta-total { font-size: 1.4rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   9. MÓDULO PRODUCCIÓN
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .prod-products {
+    grid-template-columns: 1fr !important;
+  }
+  .prod-card { padding: .9rem !important; }
+  .prod-num { font-size: 1.4rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   10. MÓDULO FINANZAS / GASTOS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fin-kpis {
+    grid-template-columns: 1fr 1fr !important;
+    gap: .5rem;
+  }
+  .fin-kpi-val { font-size: 1.2rem !important; }
+  .gasto-row {
+    flex-direction: column !important;
+    gap: .3rem;
+    align-items: flex-start !important;
+  }
+  .proyeccion-bars { overflow-x: auto; }
+  .margenes-table { overflow-x: auto; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   11. MÓDULO CIERRE DEL DÍA
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cierre-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .cierre-total { font-size: 1.6rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   12. MÓDULO COMPRAS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .compra-form { grid-template-columns: 1fr !important; }
+  .proveedor-cards {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   13. MÓDULO RECETAS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .recetas-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ingrediente-row {
+    grid-template-columns: 1fr 80px 70px 36px !important;
+    gap: .4rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   14. MODALES / OVERLAYS
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .modal-box, .modal-content {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    padding: 1.2rem !important;
+    margin: 1rem auto !important;
+    border-radius: 14px !important;
+  }
+  .modal-footer {
+    flex-direction: column !important;
+    gap: .5rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   15. ALERTAS / NOTIFICACIONES TOAST
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .toast, .alert-toast {
+    left: .8rem !important;
+    right: .8rem !important;
+    width: auto !important;
+    min-width: unset !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   16. LOGIN PAGE
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 2rem 1.4rem !important;
+    margin: 1.5rem !important;
+    border-radius: 18px !important;
+  }
+  .login-logo { font-size: 1.6rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   17. UTILIDADES RESPONSIVE
+   ──────────────────────────────────────────────────────────────── */
+/* Ocultar en móvil */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+  .only-mobile   { display: block !important; }
+}
+@media (min-width: 769px) {
+  .only-mobile   { display: none !important; }
+}
+
+/* Texto truncado en celdas */
+@media (max-width: 768px) {
+  .truncate-mobile {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Badges más pequeños en móvil */
+@media (max-width: 480px) {
+  .badge { font-size: .6rem !important; padding: .18rem .45rem !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   18. MEJORAS TÁCTILES GLOBALES
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Área táctil mínima en todos los botones e interactivos */
+  button, .btn, a.btn,
+  input[type="submit"], input[type="button"] {
+    min-height: 44px;
+  }
+
+  /* Links de acción dentro de tablas */
+  td a { padding: .2rem .3rem; }
+
+  /* Reducir box-shadows pesadas */
+  .card { box-shadow: 0 1px 6px rgba(148,91,53,.10) !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   19. SCROLLBAR PERSONALIZADO
+   ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar { width: 2px; height: 2px; }
+  ::-webkit-scrollbar-thumb { background: rgba(148,91,53,.3); }
+}

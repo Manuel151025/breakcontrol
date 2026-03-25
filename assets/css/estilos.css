@@ -1,0 +1,62 @@
+/* ============================================================
+   ESTILOS SISTEMA INVENTARIO PANADERÍA
+   Archivo: assets/css/estilos.css
+   ============================================================ */
+
+/* Semáforo de inventario */
+.semaforo-critico  { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+.semaforo-alerta   { background-color: #fff3cd; border-left: 4px solid #ffc107; }
+.semaforo-normal   { background-color: #d1e7dd; border-left: 4px solid #198754; }
+
+.badge-critico  { background-color: #dc3545; }
+.badge-alerta   { background-color: #ffc107; color: #000; }
+.badge-normal   { background-color: #198754; }
+
+/* Tarjetas del dashboard */
+.card-dashboard {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+.card-dashboard:hover {
+  transform: translateY(-3px);
+  cursor: pointer;
+}
+
+/* Tabla general */
+.tabla-panaderia th {
+  background-color: #212529;
+  color: #fff;
+  font-weight: 500;
+}
+.tabla-panaderia tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Navbar activo */
+.navbar .nav-link.active {
+  font-weight: bold;
+  color: #ffc107 !important;
+}
+
+/* Alertas del sistema */
+.alerta-item {
+  border-left: 4px solid #dc3545;
+  background: #fff5f5;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+.alerta-item.alerta-precio {
+  border-left-color: #fd7e14;
+  background: #fff8f0;
+}
+.alerta-item.alerta-margen {
+  border-left-color: #ffc107;
+  background: #fffdf0;
+}
+.alerta-item.alerta-caja {
+  border-left-color: #6f42c1;
+  background: #f8f0ff;
+}
