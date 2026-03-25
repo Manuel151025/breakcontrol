@@ -10,7 +10,7 @@
 3. Abre el navegador en `http://localhost/panaderia`
 4. Ingresar con:
    - **Usuario:** `propietario`
-   - **Contraseña:** `admin123`
+   - **Contraseña:** `admin1234`
 
 ---
 
